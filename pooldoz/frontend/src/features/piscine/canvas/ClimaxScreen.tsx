@@ -7,11 +7,16 @@
  * CSS variables only.
  */
 import { useEffect, useState, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useSettingsStore } from '@/store/settings.store'
 
 interface ClimaxScreenProps {
-  volume: number
+  volume?: number
+  zones?: Array<{ label: string; depth: number; volume: number }>
+}
+
+interface ClimaxState {
+  volume?: number
   zones?: Array<{ label: string; depth: number; volume: number }>
 }
 
@@ -25,8 +30,13 @@ function formatFR(n: number) {
   return n.toFixed(1).replace('.', ',')
 }
 
-export function ClimaxScreen({ volume, zones }: ClimaxScreenProps) {
+export function ClimaxScreen({ volume: volumeProp, zones: zonesProp }: ClimaxScreenProps) {
   const navigate = useNavigate()
+  const location = useLocation()
+  const state = (location.state ?? {}) as ClimaxState
+  // Accept data from route state (navigate('/climax', { state: ... })) or direct props
+  const volume = volumeProp ?? state.volume ?? 0
+  const zones  = zonesProp  ?? state.zones
   const isBrutale = useSettingsStore((s) => s.theme) === 'brutale'
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
