@@ -1,0 +1,38 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build outputs
+pooldoz/frontend/dist/
+_bmad-output/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Vite cache
+pooldoz/frontend/.vite/
+pooldoz/frontend/node_modules/.vite/
+
+# Logs
+*.log
+npm-debug.log*
+
+# PWA generated
+pooldoz/frontend/dist/sw.js
+pooldoz/frontend/dist/workbox-*.js

@@ -1,0 +1,25 @@
+{
+  "name": "PoolDoz",
+  "short_name": "PoolDoz",
+  "description": "Calculez le volume et dosez les produits de votre piscine",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FFF4EE",
+  "theme_color": "#2D1B69",
+  "lang": "fr",
+  "start_url": "/",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/pwa-icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/pwa-icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

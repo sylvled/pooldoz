@@ -1,0 +1,21 @@
+{
+  "title": "Settings",
+  "targets_title": "Target values",
+  "theme_title": "Theme",
+  "theme_balnea": "Balnéa",
+  "theme_brutale": "Brutale",
+  "theme_hint": "Long-press the logo to trigger the animated transition.",
+  "lang_title": "Language",
+  "account_title": "Account",
+  "account_logged_as": "Logged in as",
+  "logout": "Log out",
+  "delete_account": "Delete my account",
+  "create_account": "Create account",
+  "login": "Log in",
+  "delete_confirm_title": "Delete your account?",
+  "delete_confirm_body": "All your data (pools, sessions) will be permanently deleted.",
+  "delete_confirm_cta": "Delete permanently",
+  "deleting": "Deleting…",
+  "privacy_link": "Privacy policy",
+  "reset_target": "Reset"
+}

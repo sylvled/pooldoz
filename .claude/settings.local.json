@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(pkill -f \"vite\")",
+      "Bash(rm -rf \"D:\\\\Mes_applications\\\\bmad_piscine\\\\pooldoz\\\\frontend\\\\node_modules\\\\.vite\")",
+      "PowerShell(Get-Process -Name node -ErrorAction SilentlyContinue)",
+      "PowerShell(Stop-Process -Force -ErrorAction SilentlyContinue)",
+      "PowerShell(\"Process terminated\")",
+      "Bash(npm run *)",
+      "Bash(python3 \"D:\\\\Mes_applications\\\\bmad_piscine\\\\pooldoz\"/_bmad/scripts/resolve_customization.py --skill \"D:\\\\Mes_applications\\\\.claude\\\\skills\\\\bmad-quick-dev\" --key workflow)"
+    ]
+  }
+}

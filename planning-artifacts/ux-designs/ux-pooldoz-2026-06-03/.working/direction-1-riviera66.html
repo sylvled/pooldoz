@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PoolDoz — Direction 1 : Riviera '66</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Space+Mono:wght@400;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --coral:   #E05A3A;
+    --sand:    #F2E8D4;
+    --ocean:   #1A4A6B;
+    --sun:     #F0C040;
+    --cream:   #FBF6EC;
+    --dark:    #1C1410;
+  }
+
+  body {
+    background: var(--sand);
+    font-family: 'Space Mono', monospace;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .label {
+    text-align: center;
+    margin-bottom: 20px;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--coral);
+    font-weight: 700;
+  }
+
+  .phone {
+    width: 375px;
+    min-height: 780px;
+    background: var(--cream);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 8px 8px 0 var(--ocean);
+    border: 2px solid var(--dark);
+  }
+
+  /* ——— HEADER POSTER ——— */
+  .header {
+    background: var(--ocean);
+    padding: 28px 24px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    bottom: -30px; left: 50%;
+    transform: translateX(-50%);
+    width: 200%;
+    height: 60px;
+    background: var(--cream);
+    border-radius: 50%;
+  }
+  .sun-deco {
+    position: absolute;
+    top: -20px; right: -20px;
+    width: 120px; height: 120px;
+    background: var(--sun);
+    border-radius: 50%;
+    opacity: 0.85;
+  }
+  .logo-line {
+    font-family: 'Playfair Display', serif;
+    font-weight: 900;
+    font-size: 40px;
+    color: var(--cream);
+    line-height: 1;
+    letter-spacing: -1px;
+    position: relative;
+    z-index: 1;
+  }
+  .logo-line em {
+    font-style: italic;
+    color: var(--sun);
+  }
+  .tagline {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--sand);
+    margin-top: 4px;
+    position: relative;
+    z-index: 1;
+  }
+  .pool-name-tag {
+    margin-top: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--coral);
+    color: white;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    font-weight: 700;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* ——— CONTENT ——— */
+  .content {
+    padding: 36px 24px 24px;
+  }
+
+  /* STATUS BLOCK */
+  .status-block {
+    border: 2px solid var(--dark);
+    background: white;
+    padding: 20px;
+    position: relative;
+    margin-bottom: 24px;
+  }
+  .status-block::before {
+    content: 'ÉTAT DU SEL';
+    position: absolute;
+    top: -10px; left: 12px;
+    background: var(--sun);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding: 1px 8px;
+    color: var(--dark);
+  }
+
+  .ppm-display {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  .ppm-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 64px;
+    font-weight: 900;
+    color: var(--coral);
+    line-height: 1;
+  }
+  .ppm-unit {
+    font-size: 12px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--dark);
+    font-weight: 700;
+  }
+
+  /* RULER GAUGE */
+  .gauge-wrap {
+    margin: 12px 0;
+  }
+  .gauge-track {
+    height: 12px;
+    background: var(--sand);
+    border: 2px solid var(--dark);
+    position: relative;
+    border-radius: 2px;
+  }
+  .gauge-fill {
+    height: 100%;
+    background: repeating-linear-gradient(
+      90deg,
+      var(--coral) 0px,
+      var(--coral) 6px,
+      transparent 6px,
+      transparent 8px
+    );
+    width: 68%;
+    border-radius: 1px;
+  }
+  .gauge-target {
+    position: absolute;
+    right: 22%;
+    top: -4px;
+    height: 20px;
+    width: 3px;
+    background: var(--ocean);
+  }
+  .gauge-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: #888;
+    margin-top: 4px;
+    font-weight: 700;
+  }
+
+  .status-verdict {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: var(--sun);
+    border: 2px solid var(--dark);
+    margin-top: 12px;
+  }
+  .verdict-icon { font-size: 16px; }
+  .verdict-text {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--dark);
+  }
+
+  /* DOSAGE CARD */
+  .dosage-card {
+    border: 2px solid var(--dark);
+    background: var(--ocean);
+    padding: 20px;
+    position: relative;
+    margin-bottom: 24px;
+    color: white;
+  }
+  .dosage-card::before {
+    content: 'VOTRE PRESCRIPTION';
+    position: absolute;
+    top: -10px; left: 12px;
+    background: var(--coral);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding: 1px 8px;
+    color: white;
+  }
+
+  .rx-amount {
+    font-family: 'Playfair Display', serif;
+    font-size: 52px;
+    font-weight: 900;
+    color: var(--sun);
+    line-height: 1;
+  }
+  .rx-unit {
+    font-size: 16px;
+    color: var(--sand);
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .rx-bags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+  .bag-pill {
+    background: var(--cream);
+    color: var(--dark);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 4px 10px;
+    border: 2px solid var(--cream);
+  }
+  .rx-note {
+    font-size: 10px;
+    color: var(--sand);
+    opacity: 0.7;
+    margin-top: 8px;
+    letter-spacing: 1px;
+  }
+
+  /* VOLUME INFO */
+  .meta-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .meta-chip {
+    flex: 1;
+    border: 2px solid var(--dark);
+    padding: 10px 12px;
+    background: white;
+    text-align: center;
+  }
+  .meta-val {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--ocean);
+    line-height: 1;
+  }
+  .meta-label {
+    font-size: 8px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #888;
+    margin-top: 2px;
+    font-weight: 700;
+  }
+
+  /* CTA */
+  .cta-btn {
+    width: 100%;
+    background: var(--coral);
+    color: white;
+    border: 2px solid var(--dark);
+    padding: 16px;
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    font-style: italic;
+    letter-spacing: 0px;
+    cursor: pointer;
+    text-align: center;
+    box-shadow: 4px 4px 0 var(--dark);
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+  .cta-btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--dark);
+  }
+  .cta-btn:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 var(--dark);
+  }
+
+  /* NAV */
+  .nav-bar {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 60px;
+    background: var(--dark);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0 8px;
+  }
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    color: var(--sand);
+    opacity: 0.5;
+    font-size: 8px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 700;
+  }
+  .nav-item.active { opacity: 1; color: var(--sun); }
+  .nav-icon { font-size: 18px; }
+</style>
+</head>
+<body>
+<div class="label">Direction 1 — Riviera '66 · Estival · Rétro · Poster Art</div>
+<div class="phone">
+  <div class="header">
+    <div class="sun-deco"></div>
+    <div class="logo-line">Pool<em>Doz</em></div>
+    <div class="tagline">Dosage de précision · Piscine au sel</div>
+    <div class="pool-name-tag">▸ Ma piscine — Terrasse</div>
+  </div>
+
+  <div class="content">
+    <div class="status-block">
+      <div class="ppm-display">
+        <div class="ppm-value">2 800</div>
+        <div class="ppm-unit">ppm sel</div>
+      </div>
+      <div class="gauge-wrap">
+        <div class="gauge-track">
+          <div class="gauge-fill"></div>
+          <div class="gauge-target"></div>
+        </div>
+        <div class="gauge-labels">
+          <span>0</span><span>Cible 3 200</span><span>5 000</span>
+        </div>
+      </div>
+      <div class="status-verdict">
+        <div class="verdict-icon">🟠</div>
+        <div class="verdict-text">Taux bas — complément recommandé</div>
+      </div>
+    </div>
+
+    <div class="meta-row">
+      <div class="meta-chip">
+        <div class="meta-val">47,3 m³</div>
+        <div class="meta-label">Volume</div>
+      </div>
+      <div class="meta-chip">
+        <div class="meta-val">400 ppm</div>
+        <div class="meta-label">Déficit sel</div>
+      </div>
+    </div>
+
+    <div class="dosage-card">
+      <div class="rx-amount">14,2</div>
+      <div class="rx-unit">kilogrammes de sel</div>
+      <div class="rx-bags">
+        <div class="bag-pill">1× sac 10 kg</div>
+        <div class="bag-pill">1× sac 5 kg</div>
+      </div>
+      <div class="rx-note">↳ arrondi conservateur · ajouter d'un coup</div>
+    </div>
+
+    <button class="cta-btn">C'est fait, j'ai ajouté le sel</button>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item active">
+      <div class="nav-icon">💧</div>
+      <div>Dosage</div>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon">🏊</div>
+      <div>Piscine</div>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon">📋</div>
+      <div>Historique</div>
+    </div>
+    <div class="nav-item">
+      <div class="nav-icon">⚙️</div>
+      <div>Réglages</div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

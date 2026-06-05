@@ -1,0 +1,8 @@
+{
+  "generic": "An error occurred. Please try again.",
+  "network": "Check your connection.",
+  "email_invalid": "Invalid email address.",
+  "password_short": "Password must be at least 8 characters.",
+  "login_failed": "Incorrect email or password.",
+  "load_failed": "Could not load data."
+}

@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PoolDoz — Écran climax : Volume calculé (Balnéa)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink:    #1A0E2E;
+    --violet: #2D1B69;
+    --aqua:   #3DB8B8;
+    --aqua2:  #2A9090;
+    --peach:  #FF7E5F;
+    --cream:  #FFF4EE;
+    --muted:  #8B7BA8;
+    --faint:  rgba(26,14,46,0.07);
+  }
+
+  body {
+    background: #EDE3F8;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    gap: 8px;
+  }
+
+  .page-label {
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--violet); font-weight: 700; text-align: center;
+  }
+  .sub-label { font-size: 10px; color: var(--muted); text-align: center; margin-bottom: 8px; }
+
+  /* ——— PHONE ——— */
+  .phone {
+    width: 375px; height: 812px;
+    background: var(--cream);
+    border-radius: 40px;
+    overflow: hidden;
+    display: flex; flex-direction: column;
+    box-shadow: 0 20px 60px rgba(45,27,105,0.22), 0 4px 12px rgba(45,27,105,0.08);
+    position: relative;
+  }
+
+  /* ——— HEADER ——— */
+  .header {
+    padding: 52px 24px 16px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-shrink: 0;
+    position: relative; z-index: 2;
+  }
+  .logo { font-family: 'Lora', serif; font-size: 20px; font-weight: 700; color: var(--ink); }
+  .logo em { color: var(--aqua); font-style: italic; }
+  .step-tag {
+    font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* ——— HERO SECTION ——— */
+  .hero {
+    flex: 1;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 0 24px;
+    position: relative;
+  }
+
+  /* Background ambient glow */
+  .hero::before {
+    content: '';
+    position: absolute;
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(61,184,184,0.12) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -55%);
+    pointer-events: none;
+  }
+
+  /* POOL SHAPE VISUAL */
+  .pool-visual {
+    position: relative;
+    width: 220px; height: 160px;
+    margin-bottom: 28px;
+  }
+  #poolSvg { width: 100%; height: 100%; overflow: visible; }
+
+  /* VOLUME NUMBER */
+  .volume-block {
+    text-align: center;
+    margin-bottom: 12px;
+    position: relative; z-index: 1;
+  }
+  .vol-label {
+    font-size: 11px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 6px;
+  }
+  .vol-number {
+    font-family: 'Lora', serif;
+    font-size: 72px; font-weight: 700;
+    color: var(--ink); line-height: 1;
+    letter-spacing: -2px;
+    display: flex; align-items: baseline; justify-content: center; gap: 6px;
+  }
+  .vol-number .digits { display: inline-block; }
+  .vol-unit {
+    font-size: 28px; font-weight: 600; font-style: italic;
+    color: var(--aqua);
+  }
+  .vol-headline {
+    font-family: 'Lora', serif;
+    font-size: 17px; font-style: italic; font-weight: 400;
+    color: var(--muted);
+    margin-top: 8px;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 0.6s ease 1.8s, transform 0.6s ease 1.8s;
+  }
+  .vol-headline.visible { opacity: 1; transform: translateY(0); }
+
+  /* BREAKDOWN CARD */
+  .breakdown {
+    width: 100%;
+    background: white;
+    border-radius: 20px;
+    padding: 16px 18px;
+    box-shadow: 0 2px 14px rgba(45,27,105,0.07);
+    margin-bottom: 0;
+    position: relative; z-index: 1;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.5s ease 2.3s, transform 0.5s ease 2.3s;
+  }
+  .breakdown.visible { opacity: 1; transform: translateY(0); }
+
+  .bk-title {
+    font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 10px;
+  }
+  .bk-rows { display: flex; flex-direction: column; gap: 6px; }
+  .bk-row {
+    display: flex; align-items: center; gap: 10px;
+  }
+  .bk-swatch {
+    width: 10px; height: 10px; border-radius: 3px; flex-shrink: 0;
+  }
+  .bk-swatch.s { background: #B8E8E8; }
+  .bk-swatch.m { background: #6ABABA; }
+  .bk-swatch.d { background: #3D7AB8; }
+  .bk-label { flex: 1; font-size: 12px; color: var(--muted); font-weight: 400; }
+  .bk-val { font-family: 'Lora', serif; font-size: 14px; font-weight: 700; color: var(--ink); }
+  .bk-divider { height: 1px; background: var(--faint); margin: 4px 0; }
+  .bk-total { display: flex; justify-content: space-between; padding-top: 2px; }
+  .bk-total-label { font-size: 12px; font-weight: 700; color: var(--ink); }
+  .bk-total-val { font-family: 'Lora', serif; font-size: 15px; font-weight: 700; color: var(--aqua); }
+
+  /* ——— ACCOUNT PROMPT ——— */
+  .account-prompt {
+    flex-shrink: 0;
+    margin: 12px 20px 0;
+    background: linear-gradient(135deg, rgba(45,27,105,0.06) 0%, rgba(61,184,184,0.06) 100%);
+    border: 1px solid rgba(61,184,184,0.2);
+    border-radius: 18px;
+    padding: 14px 16px;
+    display: flex; align-items: center; gap: 12px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.5s ease 2.9s, transform 0.5s ease 2.9s;
+    position: relative; z-index: 2;
+  }
+  .account-prompt.visible { opacity: 1; transform: translateY(0); }
+
+  .ap-icon {
+    width: 36px; height: 36px; flex-shrink: 0;
+    background: rgba(61,184,184,0.12);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px;
+  }
+  .ap-text { flex: 1; }
+  .ap-title { font-size: 12px; font-weight: 700; color: var(--ink); margin-bottom: 1px; }
+  .ap-sub { font-size: 11px; color: var(--muted); font-weight: 400; }
+  .ap-btn {
+    flex-shrink: 0;
+    background: var(--aqua);
+    color: white; border: none; border-radius: 10px;
+    padding: 7px 12px; font-size: 11px; font-weight: 700;
+    cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  /* ——— BOTTOM CTA ——— */
+  .bottom-cta {
+    flex-shrink: 0;
+    padding: 12px 20px 32px;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.5s ease 3.2s, transform 0.5s ease 3.2s;
+  }
+  .bottom-cta.visible { opacity: 1; transform: translateY(0); }
+
+  .skip-link {
+    text-align: center; font-size: 11px; color: var(--muted); font-weight: 500;
+    margin-bottom: 10px; cursor: pointer;
+    text-decoration: underline; text-decoration-color: rgba(139,123,168,0.3);
+  }
+  .cta-btn {
+    width: 100%; border: none; border-radius: 16px;
+    padding: 17px; font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 16px; font-weight: 700; cursor: pointer;
+    background: linear-gradient(135deg, var(--aqua) 0%, var(--aqua2) 100%);
+    color: white;
+    box-shadow: 0 8px 24px rgba(61,184,184,0.32);
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    animation: breathe 3s ease-in-out infinite 3.5s both;
+  }
+  @keyframes breathe {
+    0%,100% { box-shadow: 0 8px 24px rgba(61,184,184,0.30); }
+    50%      { box-shadow: 0 8px 32px rgba(61,184,184,0.52); }
+  }
+</style>
+</head>
+<body>
+<div class="page-label">Écran climax — Volume calculé</div>
+<div class="sub-label">Le moment le plus fort de l'onboarding · Ouvrez dans un navigateur pour voir l'animation complète</div>
+
+<div class="phone">
+
+  <div class="header">
+    <div class="logo">Pool<em>Doz</em></div>
+    <div class="step-tag">Configuration terminée</div>
+  </div>
+
+  <div class="hero">
+
+    <!-- POOL SHAPE WITH RIPPLES -->
+    <div class="pool-visual">
+      <svg id="poolSvg" viewBox="0 0 220 160">
+        <defs>
+          <linearGradient id="shallowG" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#B8E8E8" stop-opacity="0.8"/>
+            <stop offset="100%" stop-color="#8DD8D8" stop-opacity="0.9"/>
+          </linearGradient>
+          <linearGradient id="slopeG" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#8DD8D8" stop-opacity="0.85"/>
+            <stop offset="100%" stop-color="#3D7AB8" stop-opacity="0.85"/>
+          </linearGradient>
+          <linearGradient id="deepG" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#3D7AB8" stop-opacity="0.85"/>
+            <stop offset="100%" stop-color="#1A3A60" stop-opacity="0.95"/>
+          </linearGradient>
+          <filter id="glow2">
+            <feGaussianBlur stdDeviation="3" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+          <clipPath id="poolClip">
+            <rect x="10" y="10" width="200" height="140" rx="10"/>
+          </clipPath>
+        </defs>
+
+        <!-- Ripple rings (expand outward from pool) -->
+        <ellipse id="r1" cx="110" cy="80" rx="115" ry="82" fill="none"
+                 stroke="rgba(61,184,184,0.22)" stroke-width="1.5" opacity="0"/>
+        <ellipse id="r2" cx="110" cy="80" rx="115" ry="82" fill="none"
+                 stroke="rgba(61,184,184,0.14)" stroke-width="1" opacity="0"/>
+        <ellipse id="r3" cx="110" cy="80" rx="115" ry="82" fill="none"
+                 stroke="rgba(61,184,184,0.08)" stroke-width="1" opacity="0"/>
+
+        <!-- Pool body -->
+        <g clip-path="url(#poolClip)">
+          <rect x="10" y="10" width="200" height="56" fill="url(#shallowG)"/>
+          <rect x="10" y="66" width="200" height="22" fill="url(#slopeG)"/>
+          <rect x="10" y="88" width="200" height="62" fill="url(#deepG)"/>
+        </g>
+
+        <!-- Pool border -->
+        <rect x="10" y="10" width="200" height="140" rx="10"
+              fill="none" stroke="#3DB8B8" stroke-width="2"
+              filter="url(#glow2)" opacity="0.7"/>
+
+        <!-- Zone labels -->
+        <text x="110" y="42" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif"
+              font-size="9" font-weight="600" fill="white" opacity="0.85">Petite plage · 1,2 m</text>
+        <text x="110" y="80" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif"
+              font-size="8" font-weight="500" fill="white" opacity="0.75">Pente</text>
+        <text x="110" y="118" text-anchor="middle" font-family="Plus Jakarta Sans, sans-serif"
+              font-size="9" font-weight="600" fill="white" opacity="0.85">Grand bain · 1,8 m</text>
+
+        <!-- Shimmer line on water surface -->
+        <line x1="20" y1="20" x2="100" y2="18" stroke="rgba(255,255,255,0.25)" stroke-width="1.5" stroke-linecap="round"/>
+        <line x1="130" y1="16" x2="190" y2="19" stroke="rgba(255,255,255,0.18)" stroke-width="1" stroke-linecap="round"/>
+      </svg>
+    </div>
+
+    <!-- VOLUME NUMBER -->
+    <div class="volume-block">
+      <div class="vol-label">Volume de votre piscine</div>
+      <div class="vol-number">
+        <span class="digits" id="volDigits">0,0</span>
+        <span class="vol-unit">m³</span>
+      </div>
+      <div class="vol-headline" id="volHeadline">Votre piscine n'a plus de secrets&nbsp;!</div>
+    </div>
+
+    <!-- BREAKDOWN -->
+    <div class="breakdown" id="breakdown">
+      <div class="bk-title">Détail du calcul</div>
+      <div class="bk-rows">
+        <div class="bk-row">
+          <div class="bk-swatch s"></div>
+          <div class="bk-label">Petite plage · 1,2 m</div>
+          <div class="bk-val">14,9 m³</div>
+        </div>
+        <div class="bk-row">
+          <div class="bk-swatch m"></div>
+          <div class="bk-label">Pente · 1,2 → 1,8 m</div>
+          <div class="bk-val">7,1 m³</div>
+        </div>
+        <div class="bk-row">
+          <div class="bk-swatch d"></div>
+          <div class="bk-label">Grand bain · 1,8 m</div>
+          <div class="bk-val">25,3 m³</div>
+        </div>
+        <div class="bk-divider"></div>
+        <div class="bk-total">
+          <div class="bk-total-label">Volume total</div>
+          <div class="bk-total-val">47,3 m³</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /hero -->
+
+  <!-- ACCOUNT PROMPT -->
+  <div class="account-prompt" id="accountPrompt">
+    <div class="ap-icon">☁️</div>
+    <div class="ap-text">
+      <div class="ap-title">Protégez ce profil</div>
+      <div class="ap-sub">Créez un compte pour ne jamais le perdre</div>
+    </div>
+    <button class="ap-btn">Créer</button>
+  </div>
+
+  <!-- CTA -->
+  <div class="bottom-cta" id="bottomCta">
+    <div class="skip-link">Plus tard</div>
+    <button class="cta-btn">Commencer à doser →</button>
+  </div>
+
+</div><!-- /phone -->
+
+<script>
+// ——— COUNT-UP ANIMATION ———
+const TARGET = 47.3;
+const DURATION = 1600; // ms
+
+function easeOutExpo(t) {
+  return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
+}
+
+function formatFR(n) {
+  // French decimal format: comma, 1 decimal place
+  return n.toFixed(1).replace('.', ',');
+}
+
+function startCountUp() {
+  const el = document.getElementById('volDigits');
+  const start = performance.now();
+
+  function frame(now) {
+    const t = Math.min((now - start) / DURATION, 1);
+    const ease = easeOutExpo(t);
+    const current = ease * TARGET;
+    el.textContent = formatFR(current);
+    if (t < 1) {
+      requestAnimationFrame(frame);
+    } else {
+      el.textContent = formatFR(TARGET);
+      // Reveal headline
+      document.getElementById('volHeadline').classList.add('visible');
+    }
+  }
+  requestAnimationFrame(frame);
+}
+
+// ——— POOL RIPPLES ———
+function animateRipple(el, delay, duration) {
+  let start = null;
+  function frame(now) {
+    if (!start) start = now + delay;
+    const elapsed = now - start;
+    if (elapsed < 0) { requestAnimationFrame(frame); return; }
+    const t = Math.min(elapsed / duration, 1);
+    // Scale from 1 to 1.35, fade in then out
+    const scale = 1 + t * 0.35;
+    const opacity = t < 0.2 ? t / 0.2 : 1 - (t - 0.2) / 0.8;
+    el.setAttribute('transform', `scale(${scale})`);
+    el.setAttribute('transform-origin', '110 80');
+    el.style.transformOrigin = '110px 80px';
+    el.style.transform = `scale(${scale})`;
+    el.setAttribute('opacity', Math.max(0, opacity) * 0.8);
+    if (t < 1) requestAnimationFrame(frame);
+    else {
+      el.setAttribute('opacity', 0);
+      // loop
+      setTimeout(() => animateRipple(el, 0, duration), 400);
+    }
+  }
+  requestAnimationFrame(frame);
+}
+
+// ——— REVEAL SEQUENCE ———
+window.addEventListener('load', () => {
+  // Start count-up after 400ms
+  setTimeout(startCountUp, 400);
+
+  // Ripples: staggered
+  setTimeout(() => animateRipple(document.getElementById('r1'), 0,   1200), 200);
+  setTimeout(() => animateRipple(document.getElementById('r2'), 0,   1400), 600);
+  setTimeout(() => animateRipple(document.getElementById('r3'), 0,   1600), 900);
+
+  // Reveal breakdown
+  setTimeout(() => {
+    document.getElementById('breakdown').classList.add('visible');
+  }, 2300);
+
+  // Reveal account prompt
+  setTimeout(() => {
+    document.getElementById('accountPrompt').classList.add('visible');
+  }, 2900);
+
+  // Reveal CTA
+  setTimeout(() => {
+    document.getElementById('bottomCta').classList.add('visible');
+  }, 3200);
+});
+</script>
+</body>
+</html>

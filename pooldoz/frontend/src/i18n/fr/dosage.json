@@ -1,0 +1,28 @@
+{
+  "title": "Dosage",
+  "produits": {
+    "sel": "Sel",
+    "chlore": "Chlore",
+    "ph_plus": "pH+",
+    "ph_moins": "pH−",
+    "tac": "TAC",
+    "algicide": "Algicide",
+    "stabilisant": "Stabilisant"
+  },
+  "units": {
+    "sel": "PPM",
+    "chlore": "mg/L",
+    "ph_plus": "pH",
+    "ph_moins": "pH",
+    "tac": "mg/L"
+  },
+  "mesure_label": "Taux mesuré",
+  "cible": "Cible",
+  "dose_none": "Aucun ajout nécessaire",
+  "dose_prompt": "Saisissez votre taux pour obtenir le dosage",
+  "cta_added": "J'ai ajouté le {{produit}}",
+  "niveau": "Niveau actuel",
+  "preventive_note": "La dose est calculée sur le volume de votre piscine ({{volume}} m³).",
+  "select_pool": "Choisir une piscine",
+  "suggested": "Produit sélectionné : {{produit}}"
+}

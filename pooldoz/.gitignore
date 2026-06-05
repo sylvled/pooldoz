@@ -1,0 +1,25 @@
+# Environment
+.env
+*.env.local
+
+# Dependencies
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+
+# Build output
+frontend/dist/
+frontend/.vite/
+
+# Docker volumes
+supabase/data/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/settings.json
+.idea/
+*.swp

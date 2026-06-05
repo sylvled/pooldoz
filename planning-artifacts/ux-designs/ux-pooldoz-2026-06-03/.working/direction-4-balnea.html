@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PoolDoz — Direction 4 : Balnéa (v2)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink:     #1A0E2E;
+    --violet:  #2D1B69;
+    --aqua:    #3DB8B8;
+    --aqua2:   #2A9090;
+    --peach:   #FF7E5F;
+    --cream:   #FFF4EE;
+    --sand:    #F5E6D3;
+    --muted:   #8B7BA8;
+    --faint:   rgba(26,14,46,0.08);
+  }
+
+  body {
+    background: #EDE3F8;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    gap: 8px;
+  }
+
+  .label {
+    text-align: center;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--violet);
+    font-weight: 700;
+  }
+  .sub-label {
+    font-size: 10px;
+    color: var(--muted);
+    margin-bottom: 12px;
+    text-align: center;
+  }
+
+  .phone {
+    width: 375px;
+    min-height: 780px;
+    background: var(--cream);
+    border-radius: 40px;
+    overflow: hidden;
+    position: relative;
+    box-shadow:
+      0 2px 0 rgba(255,255,255,0.8) inset,
+      0 20px 60px rgba(45,27,105,0.2),
+      0 4px 12px rgba(45,27,105,0.08);
+  }
+
+  /* ——— BLOBS ANIMÉS ——— */
+  .blob-1 {
+    position: absolute;
+    width: 160px; height: 160px;
+    background: rgba(61,184,184,0.25);
+    border-radius: 63% 37% 54% 46% / 55% 48% 52% 45%;
+    top: -30px; right: -20px;
+    animation: morph1 8s ease-in-out infinite;
+  }
+  @keyframes morph1 {
+    0%,100% { border-radius: 63% 37% 54% 46% / 55% 48% 52% 45%; transform: rotate(0deg); }
+    33%     { border-radius: 44% 56% 35% 65% / 68% 38% 62% 32%; transform: rotate(8deg); }
+    66%     { border-radius: 70% 30% 48% 52% / 40% 60% 40% 60%; transform: rotate(-5deg); }
+  }
+
+  .blob-2 {
+    position: absolute;
+    width: 80px; height: 80px;
+    background: rgba(255,126,95,0.22);
+    border-radius: 47% 53% 61% 39% / 42% 58% 42% 58%;
+    bottom: 24px; left: 24px;
+    animation: morph2 11s ease-in-out infinite;
+  }
+  @keyframes morph2 {
+    0%,100% { border-radius: 47% 53% 61% 39% / 42% 58% 42% 58%; }
+    50%     { border-radius: 62% 38% 42% 58% / 55% 45% 55% 45%; }
+  }
+
+  /* ——— HEADER ——— */
+  .header {
+    background: var(--violet);
+    padding: 52px 24px 64px;
+    position: relative;
+    overflow: visible;
+  }
+
+  .header-curve {
+    position: absolute;
+    bottom: -1px; left: 0; right: 0;
+    height: 60px;
+  }
+  .header-curve svg { width: 100%; height: 100%; display: block; }
+
+  .header-inner { position: relative; z-index: 1; }
+
+  .logo-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .logo {
+    font-family: 'Lora', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: white;
+    letter-spacing: -0.3px;
+  }
+  .logo em { color: var(--aqua); font-style: italic; }
+
+  .notif-btn {
+    width: 36px; height: 36px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+  }
+
+  .hero-text { margin-bottom: 20px; }
+  .hero-greeting {
+    font-size: 12px;
+    color: rgba(255,255,255,0.55);
+    font-weight: 400;
+    letter-spacing: 0.3px;
+    margin-bottom: 4px;
+  }
+  .hero-headline {
+    font-family: 'Lora', serif;
+    font-size: 30px;
+    font-weight: 700;
+    color: white;
+    line-height: 1.2;
+  }
+  .hero-headline em {
+    font-style: italic;
+    color: var(--aqua);
+  }
+
+  .pool-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 30px;
+    padding: 7px 14px;
+    font-size: 12px;
+    color: rgba(255,255,255,0.8);
+    font-weight: 500;
+  }
+  .pool-pill-dot {
+    width: 8px; height: 8px;
+    background: var(--aqua);
+    border-radius: 50%;
+    box-shadow: 0 0 8px var(--aqua);
+    animation: pulse-dot 2.5s ease-in-out infinite;
+  }
+  @keyframes pulse-dot {
+    0%,100% { box-shadow: 0 0 4px var(--aqua); opacity: 1; }
+    50%      { box-shadow: 0 0 14px var(--aqua), 0 0 24px rgba(61,184,184,0.4); opacity: 0.8; }
+  }
+
+  /* ——— CONTENT ——— */
+  .content {
+    padding: 70px 20px 20px;
+  }
+
+  .status-blob {
+    background: white;
+    border-radius: 28px;
+    padding: 22px;
+    margin-bottom: 14px;
+    box-shadow: 0 2px 16px rgba(45,27,105,0.06);
+    position: relative;
+    overflow: hidden;
+  }
+  .sb-corner-blob {
+    position: absolute;
+    width: 120px; height: 120px;
+    background: linear-gradient(135deg, rgba(255,126,95,0.1), rgba(255,126,95,0.04));
+    border-radius: 50%;
+    top: -40px; right: -30px;
+    animation: float 6s ease-in-out infinite;
+  }
+  @keyframes float {
+    0%,100% { transform: translateY(0px) scale(1); }
+    50%      { transform: translateY(-6px) scale(1.05); }
+  }
+
+  .sb-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .sb-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .sb-chip {
+    background: #FFF3EE;
+    color: var(--peach);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    border: 1px solid rgba(255,126,95,0.2);
+  }
+
+  .sb-reading {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    margin-bottom: 14px;
+  }
+  .sb-val {
+    font-family: 'Lora', serif;
+    font-size: 56px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1;
+    letter-spacing: -1px;
+  }
+  .sb-unit {
+    font-size: 14px;
+    color: var(--muted);
+    font-weight: 500;
+    padding-bottom: 8px;
+  }
+
+  /* PEBBLE GAUGE */
+  .pebble-gauge {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 8px;
+    align-items: center;
+  }
+  .pebble {
+    flex: 1;
+    height: 8px;
+    border-radius: 4px;
+    background: var(--faint);
+  }
+  .pebble.fill-low { background: var(--peach); }
+  .pebble.fill-mid { background: #FFA07A; }
+  .pebble.fill-hi  { background: rgba(61,184,184,0.2); }
+  .pebble.target-marker {
+    flex: 0 0 3px;
+    background: var(--aqua);
+    height: 14px;
+    border-radius: 2px;
+  }
+  .gauge-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 10px;
+    color: var(--muted);
+    font-weight: 500;
+  }
+  .gm-hi { color: var(--aqua); font-weight: 600; }
+
+  /* DOSE CARDS */
+  .dose-cards {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .dose-main {
+    flex: 3;
+    background: var(--violet);
+    border-radius: 24px;
+    padding: 18px;
+    position: relative;
+    overflow: hidden;
+  }
+  .dm-blob {
+    position: absolute;
+    width: 100px; height: 100px;
+    background: rgba(61,184,184,0.2);
+    border-radius: 50%;
+    bottom: -30px; right: -20px;
+    animation: float 7s ease-in-out infinite reverse;
+  }
+  .dm-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 8px;
+  }
+  .dm-amount {
+    font-family: 'Lora', serif;
+    font-size: 44px;
+    font-weight: 700;
+    font-style: italic;
+    color: var(--aqua);
+    line-height: 1;
+    letter-spacing: -0.5px;
+  }
+  .dm-unit {
+    font-size: 14px;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 10px;
+    font-weight: 400;
+  }
+  .dm-bags {
+    font-size: 11px;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.5;
+  }
+
+  .dose-side {
+    flex: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .ds-chip {
+    background: white;
+    border-radius: 16px;
+    padding: 12px 14px;
+    box-shadow: 0 2px 12px rgba(45,27,105,0.06);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .dsc-val {
+    font-family: 'Lora', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--ink);
+    line-height: 1;
+  }
+  .dsc-label {
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 2px;
+  }
+
+  /* CTA */
+  .cta-btn {
+    width: 100%;
+    background: linear-gradient(135deg, var(--aqua) 0%, var(--aqua2) 100%);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    padding: 18px 20px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.2px;
+    box-shadow: 0 8px 24px rgba(61,184,184,0.35);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: transform 0.15s, box-shadow 0.15s;
+    animation: breathe 3s ease-in-out infinite;
+  }
+  @keyframes breathe {
+    0%,100% { box-shadow: 0 8px 24px rgba(61,184,184,0.35); }
+    50%      { box-shadow: 0 8px 32px rgba(61,184,184,0.55); }
+  }
+  .cta-btn:hover {
+    transform: translateY(-2px);
+    animation: none;
+    box-shadow: 0 12px 32px rgba(61,184,184,0.5);
+  }
+  .cta-btn:active { transform: translateY(0px); }
+
+  /* NAV */
+  .nav-bar {
+    display: flex;
+    padding: 4px 0 20px;
+  }
+  .nav-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    font-size: 9px;
+    letter-spacing: 0.5px;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+  .nav-item.active { color: var(--violet); }
+  .nav-icon-wrap {
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    transition: background 0.2s;
+  }
+  .nav-item.active .nav-icon-wrap {
+    background: rgba(45,27,105,0.08);
+  }
+
+  /* THEME SWITCHER DEMO */
+  .theme-hint {
+    margin-top: 16px;
+    padding: 10px 16px;
+    background: rgba(45,27,105,0.1);
+    border-radius: 12px;
+    font-size: 11px;
+    color: var(--violet);
+    text-align: center;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+  }
+</style>
+</head>
+<body>
+<div class="label">Direction 4 — Balnéa v2 · Lora · Blobs animés</div>
+<div class="sub-label">→ Ouvrez dans un navigateur pour voir les animations (blobs morphants, dot pulsé, bouton respirant)</div>
+
+<div class="phone">
+  <div class="header">
+    <div class="blob-1"></div>
+    <div class="blob-2"></div>
+    <div class="header-inner">
+      <div class="logo-row">
+        <div class="logo">Pool<em>Doz</em></div>
+        <div class="notif-btn">🔔</div>
+      </div>
+      <div class="hero-text">
+        <div class="hero-greeting">Bonjour Marc</div>
+        <div class="hero-headline">Votre sel est<br><em>un peu bas</em></div>
+      </div>
+      <div class="pool-pill">
+        <div class="pool-pill-dot"></div>
+        Terrasse · 47,3 m³
+      </div>
+    </div>
+    <div class="header-curve">
+      <svg viewBox="0 0 375 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M0,0 C80,60 295,60 375,0 L375,60 L0,60 Z" fill="#FFF4EE"/>
+      </svg>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="status-blob">
+      <div class="sb-corner-blob"></div>
+      <div class="sb-top">
+        <div class="sb-label">Sel · mesuré</div>
+        <div class="sb-chip">Taux bas</div>
+      </div>
+      <div class="sb-reading">
+        <div class="sb-val">2 800</div>
+        <div class="sb-unit">ppm</div>
+      </div>
+      <div class="pebble-gauge">
+        <div class="pebble fill-low"></div>
+        <div class="pebble fill-low"></div>
+        <div class="pebble fill-low"></div>
+        <div class="pebble fill-low"></div>
+        <div class="pebble fill-mid"></div>
+        <div class="pebble fill-mid"></div>
+        <div class="pebble fill-mid"></div>
+        <div class="pebble target-marker"></div>
+        <div class="pebble fill-hi"></div>
+        <div class="pebble fill-hi"></div>
+        <div class="pebble fill-hi"></div>
+      </div>
+      <div class="gauge-meta">
+        <span>0 ppm</span>
+        <span class="gm-hi">↑ cible 3 200</span>
+        <span>5 000</span>
+      </div>
+    </div>
+
+    <div class="dose-cards">
+      <div class="dose-main">
+        <div class="dm-blob"></div>
+        <div class="dm-label">À verser maintenant</div>
+        <div class="dm-amount">14,2</div>
+        <div class="dm-unit">kg de sel</div>
+        <div class="dm-bags">1 sac 10 kg<br>+ 1 sac 5 kg</div>
+      </div>
+      <div class="dose-side">
+        <div class="ds-chip">
+          <div class="dsc-val">−400</div>
+          <div class="dsc-label">ppm manquants</div>
+        </div>
+        <div class="ds-chip">
+          <div class="dsc-val">Sel</div>
+          <div class="dsc-label">Produit actif</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="cta-btn">
+      <span>✓</span>
+      <span>J'ai ajouté le sel</span>
+    </button>
+
+    <div class="nav-bar">
+      <div class="nav-item active">
+        <div class="nav-icon-wrap">💧</div>
+        <span>Dosage</span>
+      </div>
+      <div class="nav-item">
+        <div class="nav-icon-wrap">🏊</div>
+        <span>Piscine</span>
+      </div>
+      <div class="nav-item">
+        <div class="nav-icon-wrap">📋</div>
+        <span>Journal</span>
+      </div>
+      <div class="nav-item">
+        <div class="nav-icon-wrap">⚙️</div>
+        <span>Réglages</span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="theme-hint">Thème "Balnéa" — défaut · L'autre thème disponible : "Brutale" (dir. 2)</div>
+</body>
+</html>

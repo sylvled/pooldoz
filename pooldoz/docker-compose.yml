@@ -1,0 +1,96 @@
+version: "3.9"
+
+services:
+  # ── Frontend (Nginx + Vite build) ──────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - supabase-kong
+    restart: unless-stopped
+    networks:
+      - pooldoz
+
+  # ── CV API (FastAPI + OpenCV) ───────────────────────────────
+  cv-api:
+    build:
+      context: ./cv-api
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8001"
+    restart: unless-stopped
+    networks:
+      - pooldoz
+
+  # ── Supabase stack ──────────────────────────────────────────
+  supabase-db:
+    image: supabase/postgres:15.8.1.73
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: postgres
+    volumes:
+      - supabase_db:/var/lib/postgresql/data
+      - ./supabase/migrations:/docker-entrypoint-initdb.d
+    networks:
+      - pooldoz
+    restart: unless-stopped
+
+  supabase-kong:
+    image: kong:3.9
+    environment:
+      KONG_DATABASE: "off"
+      KONG_DECLARATIVE_CONFIG: /etc/kong/kong.yml
+    volumes:
+      - ./supabase/kong.yml:/etc/kong/kong.yml:ro
+    ports:
+      - "8000:8000"
+    depends_on:
+      - supabase-db
+      - supabase-auth
+      - supabase-rest
+    networks:
+      - pooldoz
+    restart: unless-stopped
+
+  supabase-auth:
+    image: supabase/gotrue:v2.170.0
+    environment:
+      GOTRUE_DB_DRIVER: postgres
+      GOTRUE_DB_DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD}@supabase-db:5432/postgres?sslmode=disable
+      GOTRUE_SITE_URL: ${SITE_URL}
+      GOTRUE_JWT_SECRET: ${JWT_SECRET}
+      GOTRUE_JWT_EXP: 3600
+      API_EXTERNAL_URL: ${API_EXTERNAL_URL}
+      GOTRUE_SMTP_HOST: ${SMTP_HOST:-""}
+      GOTRUE_SMTP_PORT: ${SMTP_PORT:-587}
+      GOTRUE_SMTP_USER: ${SMTP_USER:-""}
+      GOTRUE_SMTP_PASS: ${SMTP_PASS:-""}
+    depends_on:
+      - supabase-db
+    networks:
+      - pooldoz
+    restart: unless-stopped
+
+  supabase-rest:
+    image: postgrest/postgrest:v12.2.3
+    environment:
+      PGRST_DB_URI: postgres://postgres:${POSTGRES_PASSWORD}@supabase-db:5432/postgres
+      PGRST_DB_SCHEMA: public
+      PGRST_DB_ANON_ROLE: anon
+      PGRST_JWT_SECRET: ${JWT_SECRET}
+    depends_on:
+      - supabase-db
+    networks:
+      - pooldoz
+    restart: unless-stopped
+
+volumes:
+  supabase_db:
+
+networks:
+  pooldoz:
+    driver: bridge

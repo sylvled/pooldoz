@@ -1,0 +1,28 @@
+{
+  "title": "Dosing",
+  "produits": {
+    "sel": "Salt",
+    "chlore": "Chlorine",
+    "ph_plus": "pH+",
+    "ph_moins": "pH−",
+    "tac": "TA",
+    "algicide": "Algaecide",
+    "stabilisant": "Stabiliser"
+  },
+  "units": {
+    "sel": "PPM",
+    "chlore": "mg/L",
+    "ph_plus": "pH",
+    "ph_moins": "pH",
+    "tac": "mg/L"
+  },
+  "mesure_label": "Measured level",
+  "cible": "Target",
+  "dose_none": "No addition needed",
+  "dose_prompt": "Enter your level to get the dosage",
+  "cta_added": "I added the {{produit}}",
+  "niveau": "Current level",
+  "preventive_note": "Dose calculated on your pool volume ({{volume}} m³).",
+  "select_pool": "Select a pool",
+  "suggested": "Selected product: {{produit}}"
+}

@@ -1,0 +1,21 @@
+{
+  "title": "Réglages",
+  "targets_title": "Valeurs cibles",
+  "theme_title": "Thème",
+  "theme_balnea": "Balnéa",
+  "theme_brutale": "Brutale",
+  "theme_hint": "Appui long sur le logo pour activer la transition animée.",
+  "lang_title": "Langue",
+  "account_title": "Compte",
+  "account_logged_as": "Connecté en tant que",
+  "logout": "Se déconnecter",
+  "delete_account": "Supprimer mon compte",
+  "create_account": "Créer un compte",
+  "login": "Se connecter",
+  "delete_confirm_title": "Supprimer votre compte ?",
+  "delete_confirm_body": "Toutes vos données (piscines, sessions) seront supprimées définitivement.",
+  "delete_confirm_cta": "Supprimer définitivement",
+  "deleting": "Suppression…",
+  "privacy_link": "Politique de confidentialité",
+  "reset_target": "Réinitialiser"
+}

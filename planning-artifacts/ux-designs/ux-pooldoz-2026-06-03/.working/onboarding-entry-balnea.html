@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PoolDoz — Onboarding : Entrée configuration (Balnéa)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,600;0,700;1,400;1,700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink:    #1A0E2E;
+    --violet: #2D1B69;
+    --aqua:   #3DB8B8;
+    --aqua2:  #2A9090;
+    --peach:  #FF7E5F;
+    --cream:  #FFF4EE;
+    --muted:  #8B7BA8;
+    --faint:  rgba(26,14,46,0.07);
+    --card:   rgba(255,255,255,0.95);
+  }
+
+  body {
+    background: #EDE3F8;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 24px; gap: 8px;
+  }
+
+  .page-label {
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--violet); font-weight: 700; text-align: center;
+  }
+  .sub-label { font-size: 10px; color: var(--muted); text-align: center; margin-bottom: 8px; }
+
+  /* ——— PHONE ——— */
+  .phone {
+    width: 375px; height: 812px;
+    background: var(--cream);
+    border-radius: 40px; overflow: hidden;
+    display: flex; flex-direction: column;
+    box-shadow: 0 20px 60px rgba(45,27,105,0.22), 0 4px 12px rgba(45,27,105,0.08);
+    position: relative;
+  }
+
+  /* ——— HEADER ——— */
+  .header {
+    background: var(--violet);
+    padding: 52px 24px 44px;
+    flex-shrink: 0; position: relative; overflow: hidden;
+  }
+  .hblob {
+    position: absolute; width: 140px; height: 140px;
+    background: rgba(61,184,184,0.2);
+    border-radius: 60% 40% 55% 45% / 50% 60% 40% 50%;
+    top: -30px; right: -20px;
+    animation: bmorph 9s ease-in-out infinite;
+  }
+  @keyframes bmorph {
+    0%,100% { border-radius: 60% 40% 55% 45% / 50% 60% 40% 50%; }
+    50%      { border-radius: 42% 58% 45% 55% / 58% 42% 58% 42%; }
+  }
+  .hblob2 {
+    position: absolute; width: 70px; height: 70px;
+    background: rgba(255,126,95,0.18);
+    border-radius: 48% 52% 62% 38% / 44% 56% 44% 56%;
+    bottom: -10px; left: 30px;
+    animation: bmorph 12s ease-in-out infinite reverse;
+  }
+  .h-inner { position: relative; z-index: 1; }
+  .logo { font-family: 'Lora', serif; font-size: 22px; font-weight: 700; color: white; margin-bottom: 14px; }
+  .logo em { color: var(--aqua); font-style: italic; }
+  .h-title { font-family: 'Lora', serif; font-size: 26px; font-weight: 700; color: white; line-height: 1.2; }
+  .h-title em { font-style: italic; color: var(--aqua); }
+  .h-sub { font-size: 13px; color: rgba(255,255,255,0.55); font-weight: 400; margin-top: 4px; }
+  .header-curve {
+    position: absolute; bottom: -1px; left: 0; right: 0; height: 50px;
+  }
+  .header-curve svg { width: 100%; height: 100%; display: block; }
+
+  /* ——— SCREENS ——— */
+  .screen {
+    flex: 1; overflow: hidden;
+    display: flex; flex-direction: column;
+    transition: opacity 0.35s ease, transform 0.35s ease;
+  }
+  .screen.hidden {
+    opacity: 0; pointer-events: none; position: absolute; top: 0;
+  }
+
+  /* ======= SCREEN 1: ENTRY MODE ======= */
+  #screen1 { padding: 60px 20px 20px; gap: 12px; }
+
+  .entry-intro {
+    font-size: 12px; font-weight: 600; letter-spacing: 1px;
+    text-transform: uppercase; color: var(--muted);
+    margin-bottom: 4px;
+  }
+
+  /* Entry cards */
+  .entry-card {
+    background: white;
+    border-radius: 22px;
+    padding: 18px 18px 18px 16px;
+    display: flex; align-items: center; gap: 16px;
+    box-shadow: 0 2px 12px rgba(45,27,105,0.07);
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+    position: relative; overflow: hidden;
+    flex-shrink: 0;
+  }
+  .entry-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(45,27,105,0.12);
+  }
+  .entry-card:active { transform: translateY(0); }
+
+  .entry-card.primary {
+    border-color: rgba(61,184,184,0.35);
+    background: linear-gradient(135deg, white 60%, rgba(61,184,184,0.04) 100%);
+  }
+
+  .card-badge {
+    position: absolute; top: 12px; right: 12px;
+    background: rgba(61,184,184,0.12);
+    color: var(--aqua2); font-size: 9px; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase;
+    padding: 3px 8px; border-radius: 8px;
+    border: 1px solid rgba(61,184,184,0.2);
+  }
+
+  .card-icon-wrap {
+    width: 56px; height: 56px; flex-shrink: 0;
+    border-radius: 16px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px;
+  }
+  .icon-photo  { background: linear-gradient(135deg, rgba(61,184,184,0.15), rgba(61,184,184,0.05)); }
+  .icon-maps   { background: linear-gradient(135deg, rgba(255,126,95,0.15), rgba(255,126,95,0.05)); }
+  .icon-manual { background: linear-gradient(135deg, rgba(45,27,105,0.12), rgba(45,27,105,0.04)); }
+
+  .card-text { flex: 1; }
+  .card-title { font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 3px; }
+  .card-desc  { font-size: 12px; color: var(--muted); font-weight: 400; line-height: 1.4; }
+  .card-arrow { font-size: 18px; color: rgba(139,123,168,0.4); flex-shrink: 0; }
+  .entry-card.primary .card-arrow { color: var(--aqua); }
+
+  /* Skip link */
+  .skip-row {
+    text-align: center; margin-top: auto; padding-bottom: 8px;
+    font-size: 12px; color: var(--muted); font-weight: 500;
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-color: rgba(139,123,168,0.3);
+  }
+
+  /* ======= SCREEN 2: SHAPE SELECTION ======= */
+  #screen2 { padding: 60px 20px 20px; }
+
+  .s2-back {
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 600; color: var(--muted);
+    cursor: pointer; margin-bottom: 16px; flex-shrink: 0;
+  }
+  .s2-back:hover { color: var(--violet); }
+
+  .s2-title {
+    font-family: 'Lora', serif; font-size: 22px; font-weight: 700;
+    color: var(--ink); line-height: 1.2; margin-bottom: 4px; flex-shrink: 0;
+  }
+  .s2-title em { color: var(--aqua); font-style: italic; }
+  .s2-sub {
+    font-size: 12px; color: var(--muted); font-weight: 400;
+    margin-bottom: 20px; flex-shrink: 0; line-height: 1.5;
+  }
+
+  /* Shapes grid */
+  .shapes-grid {
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px; flex-shrink: 0; margin-bottom: 16px;
+  }
+  .shape-card {
+    background: white; border-radius: 18px;
+    padding: 12px 8px 10px;
+    display: flex; flex-direction: column; align-items: center; gap: 6px;
+    border: 2px solid transparent;
+    box-shadow: 0 2px 8px rgba(45,27,105,0.07);
+    cursor: pointer;
+    transition: border-color 0.2s, transform 0.15s;
+    aspect-ratio: 1;
+    justify-content: center;
+  }
+  .shape-card:hover { transform: translateY(-1px); }
+  .shape-card.selected {
+    border-color: var(--aqua);
+    background: linear-gradient(135deg, white, rgba(61,184,184,0.05));
+    box-shadow: 0 4px 16px rgba(61,184,184,0.2);
+  }
+  .shape-svg { width: 64px; height: 48px; }
+  .shape-label {
+    font-size: 10px; font-weight: 600; color: var(--muted);
+    text-align: center; letter-spacing: 0.3px;
+  }
+  .shape-card.selected .shape-label { color: var(--aqua2); }
+
+  /* Magnet hint */
+  .magnet-hint {
+    display: flex; align-items: center; gap: 8px;
+    background: rgba(61,184,184,0.07);
+    border: 1px solid rgba(61,184,184,0.18);
+    border-radius: 12px; padding: 10px 14px;
+    margin-bottom: 14px; flex-shrink: 0;
+  }
+  .mh-icon { font-size: 14px; flex-shrink: 0; }
+  .mh-text { font-size: 11px; color: var(--aqua2); font-weight: 500; line-height: 1.4; }
+
+  /* S2 CTA */
+  .s2-cta {
+    margin-top: auto; flex-shrink: 0; padding-bottom: 8px;
+  }
+  .s2-cta-btn {
+    width: 100%; border: none; border-radius: 16px;
+    padding: 17px; font-size: 16px; font-weight: 700;
+    cursor: pointer; font-family: 'Plus Jakarta Sans', sans-serif;
+    background: linear-gradient(135deg, var(--aqua) 0%, var(--aqua2) 100%);
+    color: white; box-shadow: 0 8px 24px rgba(61,184,184,0.3);
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .s2-skip {
+    text-align: center; margin-top: 10px;
+    font-size: 11px; color: var(--muted);
+    cursor: pointer; text-decoration: underline;
+    text-decoration-color: rgba(139,123,168,0.3);
+  }
+</style>
+</head>
+<body>
+<div class="page-label">Onboarding — Entrée configuration piscine</div>
+<div class="sub-label">Tapez une carte pour naviguer · "Dessin manuel" révèle le sélecteur de formes</div>
+
+<div class="phone">
+
+  <!-- HEADER (commun aux deux états) -->
+  <div class="header" id="mainHeader">
+    <div class="hblob"></div>
+    <div class="hblob2"></div>
+    <div class="h-inner">
+      <div class="logo">Pool<em>Doz</em></div>
+      <div class="h-title" id="hTitle">Configurons<br>votre <em>piscine</em></div>
+      <div class="h-sub" id="hSub">Comment voulez-vous démarrer ?</div>
+    </div>
+    <div class="header-curve">
+      <svg viewBox="0 0 375 50" preserveAspectRatio="none">
+        <path d="M0,0 C90,50 285,50 375,0 L375,50 L0,50 Z" fill="#FFF4EE"/>
+      </svg>
+    </div>
+  </div>
+
+  <!-- SCREEN 1: CHOIX D'ENTRÉE -->
+  <div class="screen" id="screen1">
+    <div class="entry-intro">Choisir la méthode</div>
+
+    <!-- PHOTO (recommandé) -->
+    <div class="entry-card primary" onclick="void(0)">
+      <div class="card-badge">Recommandé</div>
+      <div class="card-icon-wrap icon-photo">📸</div>
+      <div class="card-text">
+        <div class="card-title">Depuis une photo</div>
+        <div class="card-desc">Prenez la piscine depuis la terrasse — l'app détecte les contours automatiquement</div>
+      </div>
+      <div class="card-arrow">→</div>
+    </div>
+
+    <!-- MAPS -->
+    <div class="entry-card" onclick="void(0)">
+      <div class="card-icon-wrap icon-maps">🗺️</div>
+      <div class="card-text">
+        <div class="card-title">Depuis Maps</div>
+        <div class="card-desc">Importez une capture d'écran satellite — détection automatique identique</div>
+      </div>
+      <div class="card-arrow">→</div>
+    </div>
+
+    <!-- DESSIN MANUEL -->
+    <div class="entry-card" id="manualCard" onclick="goToShapes()">
+      <div class="card-icon-wrap icon-manual">✏️</div>
+      <div class="card-text">
+        <div class="card-title">Dessin manuel</div>
+        <div class="card-desc">Choisissez une forme de départ et affinez à la main</div>
+      </div>
+      <div class="card-arrow">→</div>
+    </div>
+
+  </div>
+
+  <!-- SCREEN 2: SÉLECTION DE FORME -->
+  <div class="screen hidden" id="screen2">
+    <div class="s2-back" onclick="goBack()">← Retour</div>
+    <div class="s2-title">Choisissez une<br><em>forme de départ</em></div>
+    <div class="s2-sub">Toutes les formes sont ajustables. Étirez, déplacez les points, ajoutez des coins librement.</div>
+
+    <div class="shapes-grid">
+
+      <!-- Rectangle -->
+      <div class="shape-card selected" onclick="selectShape(this)">
+        <svg class="shape-svg" viewBox="0 0 64 48">
+          <rect x="6" y="8" width="52" height="32" rx="4"
+                fill="rgba(61,184,184,0.15)" stroke="#3DB8B8" stroke-width="2"/>
+        </svg>
+        <div class="shape-label">Rectangle</div>
+      </div>
+
+      <!-- Ovale -->
+      <div class="shape-card" onclick="selectShape(this)">
+        <svg class="shape-svg" viewBox="0 0 64 48">
+          <ellipse cx="32" cy="24" rx="26" ry="17"
+                   fill="rgba(45,27,105,0.08)" stroke="#8B7BA8" stroke-width="2"/>
+        </svg>
+        <div class="shape-label">Ovale</div>
+      </div>
+
+      <!-- Haricot / Kidney -->
+      <div class="shape-card" onclick="selectShape(this)">
+        <svg class="shape-svg" viewBox="0 0 64 48">
+          <path d="M12,28 C10,18 16,8 26,8 C32,8 34,12 38,12 C46,12 54,16 54,24 C54,34 46,40 38,40 C30,40 28,36 22,36 C16,36 14,38 12,28 Z"
+                fill="rgba(45,27,105,0.08)" stroke="#8B7BA8" stroke-width="2"/>
+        </svg>
+        <div class="shape-label">Haricot</div>
+      </div>
+
+      <!-- Forme en L -->
+      <div class="shape-card" onclick="selectShape(this)">
+        <svg class="shape-svg" viewBox="0 0 64 48">
+          <path d="M8,8 L38,8 L38,24 L54,24 L54,40 L8,40 Z"
+                fill="rgba(45,27,105,0.08)" stroke="#8B7BA8" stroke-width="2" stroke-linejoin="round"/>
+        </svg>
+        <div class="shape-label">Forme en L</div>
+      </div>
+
+      <!-- Forme en T -->
+      <div class="shape-card" onclick="selectShape(this)">
+        <svg class="shape-svg" viewBox="0 0 64 48">
+          <path d="M6,8 L58,8 L58,22 L38,22 L38,40 L26,40 L26,22 L6,22 Z"
+                fill="rgba(45,27,105,0.08)" stroke="#8B7BA8" stroke-width="2" stroke-linejoin="round"/>
+        </svg>
+        <div class="shape-label">Forme en T</div>
+      </div>
+
+      <!-- Forme libre -->
+      <div class="shape-card" onclick="selectShape(this)">
+        <svg class="shape-svg" viewBox="0 0 64 48">
+          <!-- Pencil icon for "libre" -->
+          <path d="M18,34 L14,38 L20,38 Z" fill="#8B7BA8" opacity="0.6"/>
+          <rect x="17" y="14" width="10" height="22" rx="2"
+                fill="none" stroke="#8B7BA8" stroke-width="1.8"
+                transform="rotate(-30 22 24)"/>
+          <line x1="19" y1="16" x2="26" y2="22" stroke="#8B7BA8" stroke-width="1.5" opacity="0.5"
+                transform="rotate(-30 22 24)"/>
+          <!-- Dashed freehand path -->
+          <path d="M32,36 C36,28 42,32 44,24 C46,16 40,14 44,10"
+                fill="none" stroke="#8B7BA8" stroke-width="1.8"
+                stroke-dasharray="3,2" stroke-linecap="round"/>
+        </svg>
+        <div class="shape-label">Forme libre</div>
+      </div>
+
+    </div><!-- /shapes-grid -->
+
+    <!-- Magnet hint -->
+    <div class="magnet-hint">
+      <div class="mh-icon">🧲</div>
+      <div class="mh-text">Magnets légers activés — les bords s'alignent automatiquement sur les limites détectées</div>
+    </div>
+
+    <div class="s2-cta">
+      <button class="s2-cta-btn">Commencer le dessin →</button>
+      <div class="s2-skip">Choisir une autre méthode</div>
+    </div>
+
+  </div><!-- /screen2 -->
+
+</div><!-- /phone -->
+
+<script>
+function goToShapes() {
+  const s1 = document.getElementById('screen1');
+  const s2 = document.getElementById('screen2');
+  const hTitle = document.getElementById('hTitle');
+  const hSub   = document.getElementById('hSub');
+
+  s1.style.opacity = '0';
+  s1.style.transform = 'translateX(-24px)';
+  setTimeout(() => {
+    s1.classList.add('hidden');
+    s2.classList.remove('hidden');
+    s2.style.opacity = '0';
+    s2.style.transform = 'translateX(24px)';
+    hTitle.innerHTML = 'Forme de<br><em>départ</em>';
+    hSub.textContent = 'Ajustable à tout moment';
+    requestAnimationFrame(() => {
+      s2.style.transition = 'opacity 0.32s ease, transform 0.32s ease';
+      s2.style.opacity = '1';
+      s2.style.transform = 'translateX(0)';
+    });
+  }, 250);
+}
+
+function goBack() {
+  const s1 = document.getElementById('screen1');
+  const s2 = document.getElementById('screen2');
+  const hTitle = document.getElementById('hTitle');
+  const hSub   = document.getElementById('hSub');
+
+  s2.style.opacity = '0';
+  s2.style.transform = 'translateX(24px)';
+  setTimeout(() => {
+    s2.classList.add('hidden');
+    s1.classList.remove('hidden');
+    s1.style.opacity = '0';
+    s1.style.transform = 'translateX(-24px)';
+    hTitle.innerHTML = 'Configurons<br>votre <em>piscine</em>';
+    hSub.textContent = 'Comment voulez-vous démarrer ?';
+    requestAnimationFrame(() => {
+      s1.style.transition = 'opacity 0.32s ease, transform 0.32s ease';
+      s1.style.opacity = '1';
+      s1.style.transform = 'translateX(0)';
+    });
+  }, 220);
+}
+
+function selectShape(el) {
+  document.querySelectorAll('.shape-card').forEach(c => {
+    c.classList.remove('selected');
+    c.querySelector('svg path, svg rect, svg ellipse') &&
+      c.querySelectorAll('svg path, svg rect, svg ellipse').forEach(s => {
+        s.setAttribute('fill', s.getAttribute('fill')?.includes('61,184') ? 'rgba(45,27,105,0.08)' : s.getAttribute('fill'));
+        s.setAttribute('stroke', '#8B7BA8');
+      });
+    c.querySelector('.shape-label').style.color = '';
+  });
+  el.classList.add('selected');
+  // Highlight selected shape strokes
+  el.querySelectorAll('svg rect, svg ellipse, svg path').forEach(s => {
+    const f = s.getAttribute('fill');
+    if (f && !f.includes('none') && !f.includes('8B7BA8') && f !== 'undefined') {
+      s.setAttribute('fill', 'rgba(61,184,184,0.15)');
+    }
+    if (s.getAttribute('stroke') && s.getAttribute('stroke') !== 'none') {
+      s.setAttribute('stroke', '#3DB8B8');
+    }
+  });
+}
+</script>
+</body>
+</html>

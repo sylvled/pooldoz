@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PoolDoz — Canvas de configuration (Balnéa)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink:    #1A0E2E;
+    --violet: #2D1B69;
+    --aqua:   #3DB8B8;
+    --peach:  #FF7E5F;
+    --cream:  #FFF4EE;
+    --muted:  #8B7BA8;
+    --faint:  rgba(26,14,46,0.07);
+    --grid:   rgba(61,184,184,0.12);
+  }
+
+  body {
+    background: #EDE3F8;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    gap: 10px;
+  }
+
+  .page-label {
+    font-size: 11px; letter-spacing: 3px; text-transform: uppercase;
+    color: var(--violet); font-weight: 700; text-align: center;
+  }
+  .sub-label {
+    font-size: 10px; color: var(--muted); text-align: center;
+    margin-bottom: 4px;
+  }
+
+  .phone {
+    width: 375px;
+    height: 812px;
+    background: var(--cream);
+    border-radius: 40px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(45,27,105,0.2), 0 4px 12px rgba(45,27,105,0.08);
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ——— TOP BAR ——— */
+  .top-bar {
+    background: var(--violet);
+    padding: 52px 20px 14px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 10;
+  }
+  .back-btn {
+    width: 34px; height: 34px;
+    background: rgba(255,255,255,0.12);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; color: white; cursor: pointer; flex-shrink: 0;
+  }
+  .top-title {
+    flex: 1;
+  }
+  .top-title-main {
+    font-family: 'Lora', serif;
+    font-size: 17px; font-weight: 700;
+    color: white; line-height: 1.1;
+  }
+  .top-title-sub {
+    font-size: 11px; color: rgba(255,255,255,0.5);
+    font-weight: 500; margin-top: 2px;
+  }
+
+  /* STEP PILLS */
+  .step-pills {
+    display: flex;
+    gap: 6px;
+    padding: 10px 20px 12px;
+    background: var(--violet);
+    flex-shrink: 0;
+    overflow-x: auto;
+  }
+  .step-pill {
+    display: flex; align-items: center; gap: 5px;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 10px; font-weight: 600;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+    cursor: pointer;
+  }
+  .sp-done {
+    background: rgba(61,184,184,0.2);
+    color: var(--aqua);
+    border: 1px solid rgba(61,184,184,0.3);
+  }
+  .sp-active {
+    background: var(--aqua);
+    color: white;
+    border: 1px solid var(--aqua);
+  }
+  .sp-todo {
+    background: rgba(255,255,255,0.08);
+    color: rgba(255,255,255,0.4);
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+  .sp-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+  }
+  .sp-done .sp-dot  { background: var(--aqua); }
+  .sp-active .sp-dot { background: white; }
+  .sp-todo .sp-dot  { background: rgba(255,255,255,0.3); }
+
+  /* ——— CANVAS ZONE ——— */
+  .canvas-wrap {
+    flex: 1;
+    position: relative;
+    background: #F0EBF8;
+    overflow: hidden;
+  }
+
+  /* Grid pattern */
+  .canvas-wrap::before {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+    background-size: 28px 28px;
+  }
+
+  /* Pool SVG canvas */
+  .pool-svg {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+  }
+
+  /* ——— TOOLBAR ——— */
+  .toolbar {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 10;
+  }
+  .tool-btn {
+    width: 40px; height: 40px;
+    background: white;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 17px;
+    box-shadow: 0 2px 10px rgba(45,27,105,0.12);
+    cursor: pointer;
+    border: 1.5px solid rgba(45,27,105,0.06);
+    position: relative;
+  }
+  .tool-btn.active {
+    background: var(--violet);
+    border-color: var(--violet);
+  }
+  .tool-btn.active::after {
+    content: '';
+    position: absolute;
+    left: -4px; top: 50%; transform: translateY(-50%);
+    width: 3px; height: 20px;
+    background: var(--aqua);
+    border-radius: 2px;
+  }
+  .tool-divider {
+    width: 40px; height: 1px;
+    background: rgba(45,27,105,0.1);
+  }
+
+  /* ——— LOUPE ——— */
+  .loupe {
+    position: absolute;
+    width: 80px; height: 80px;
+    border-radius: 50%;
+    background: white;
+    border: 3px solid var(--aqua);
+    box-shadow: 0 4px 20px rgba(45,27,105,0.25), 0 0 0 1px rgba(61,184,184,0.3);
+    overflow: hidden;
+    /* positioned above the calibration point */
+    left: 120px; top: 70px;
+    z-index: 20;
+    display: flex; align-items: center; justify-content: center;
+  }
+  /* loupe crosshair */
+  .loupe::before {
+    content: '';
+    position: absolute;
+    left: 50%; top: 0; bottom: 0;
+    width: 1px; background: rgba(61,184,184,0.6);
+    transform: translateX(-50%);
+  }
+  .loupe::after {
+    content: '';
+    position: absolute;
+    top: 50%; left: 0; right: 0;
+    height: 1px; background: rgba(61,184,184,0.6);
+    transform: translateY(-50%);
+  }
+  /* connector line from loupe to point */
+  .loupe-line {
+    position: absolute;
+    left: 159px; top: 149px;
+    width: 1px; height: 28px;
+    background: var(--aqua);
+    opacity: 0.5;
+    z-index: 19;
+    transform-origin: top center;
+  }
+  /* loupe inner content: zoomed pool corner */
+  .loupe-inner {
+    width: 100%; height: 100%;
+    position: relative;
+  }
+  .loupe-pool-corner {
+    position: absolute;
+    /* show corner of pool boundary at 3x zoom */
+    bottom: 10px; right: 10px;
+    width: 40px; height: 40px;
+    border: 3px solid var(--aqua);
+    border-radius: 2px;
+  }
+  .loupe-calib-dot {
+    position: absolute;
+    bottom: 10px; right: 10px;
+    width: 10px; height: 10px;
+    background: var(--peach);
+    border: 2.5px solid white;
+    border-radius: 50%;
+    box-shadow: 0 0 0 2px var(--peach);
+    transform: translate(50%, 50%);
+  }
+  .loupe-label {
+    position: absolute;
+    bottom: -18px; left: 50%;
+    transform: translateX(-50%);
+    font-size: 9px; font-weight: 700;
+    letter-spacing: 1px; text-transform: uppercase;
+    color: var(--aqua); white-space: nowrap;
+  }
+
+  /* ——— BOTTOM PANEL ——— */
+  .bottom-panel {
+    flex-shrink: 0;
+    background: white;
+    border-radius: 24px 24px 0 0;
+    padding: 16px 20px 28px;
+    box-shadow: 0 -4px 24px rgba(45,27,105,0.08);
+    z-index: 10;
+    position: relative;
+  }
+
+  .panel-handle {
+    width: 36px; height: 4px;
+    background: var(--faint);
+    border-radius: 2px;
+    margin: 0 auto 14px;
+  }
+
+  .panel-context {
+    display: flex; align-items: flex-start; gap: 12px;
+    margin-bottom: 16px;
+  }
+  .context-icon {
+    width: 40px; height: 40px;
+    background: linear-gradient(135deg, rgba(61,184,184,0.15), rgba(61,184,184,0.05));
+    border: 1px solid rgba(61,184,184,0.2);
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; flex-shrink: 0;
+  }
+  .context-text { flex: 1; }
+  .ct-title {
+    font-size: 14px; font-weight: 700; color: var(--ink);
+    margin-bottom: 3px;
+  }
+  .ct-sub {
+    font-size: 12px; color: var(--muted); line-height: 1.4; font-weight: 400;
+  }
+  .ct-sub strong { color: var(--ink); font-weight: 600; }
+
+  /* ZONE DEPTH INPUTS */
+  .zone-list {
+    display: flex; flex-direction: column; gap: 8px;
+    margin-bottom: 14px;
+  }
+  .zone-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 14px;
+    border-radius: 14px;
+    border: 1.5px solid transparent;
+    background: var(--faint);
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .zone-row.active {
+    border-color: var(--aqua);
+    background: rgba(61,184,184,0.06);
+  }
+  .zone-swatch {
+    width: 28px; height: 28px;
+    border-radius: 8px;
+    flex-shrink: 0;
+  }
+  .zone-swatch.shallow { background: linear-gradient(135deg, #B8E8E8, #8DD8D8); }
+  .zone-swatch.deep    { background: linear-gradient(135deg, #3D7AB8, #1A4A80); }
+  .zone-swatch.slope   { background: linear-gradient(135deg, #8DD8D8, #3D7AB8); }
+
+  .zone-label { flex: 1; }
+  .zl-name {
+    font-size: 12px; font-weight: 600; color: var(--ink);
+  }
+  .zl-depth {
+    font-size: 11px; color: var(--muted); font-weight: 400;
+  }
+  .zone-depth-input {
+    display: flex; align-items: center; gap: 4px;
+  }
+  .zdi-val {
+    background: white;
+    border: 1.5px solid rgba(45,27,105,0.12);
+    border-radius: 8px;
+    padding: 4px 8px;
+    font-size: 13px; font-weight: 700;
+    color: var(--ink);
+    width: 48px; text-align: center;
+    font-family: 'Lora', serif;
+  }
+  .zdi-unit { font-size: 10px; color: var(--muted); font-weight: 500; }
+
+  /* ACTIONS ROW */
+  .action-row {
+    display: flex; gap: 10px;
+  }
+  .btn-secondary {
+    flex: 1;
+    background: var(--faint);
+    color: var(--violet);
+    border: none; border-radius: 14px;
+    padding: 13px;
+    font-size: 13px; font-weight: 700;
+    cursor: pointer;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+  .btn-primary {
+    flex: 2;
+    background: linear-gradient(135deg, var(--aqua) 0%, #2A9090 100%);
+    color: white;
+    border: none; border-radius: 14px;
+    padding: 13px;
+    font-size: 14px; font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 6px 18px rgba(61,184,184,0.3);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+  }
+</style>
+</head>
+<body>
+<div class="page-label">Canvas de configuration — étape 3/4 : Zones de profondeur + calibrage</div>
+<div class="sub-label">Thème Balnéa · état interactif affiché · loupe active sur le point de calibrage</div>
+
+<div class="phone">
+  <!-- TOP BAR -->
+  <div class="top-bar">
+    <div class="back-btn">←</div>
+    <div class="top-title">
+      <div class="top-title-main">Ma piscine — Terrasse</div>
+      <div class="top-title-sub">Configuration · étape 3 sur 4</div>
+    </div>
+  </div>
+
+  <!-- STEP PILLS -->
+  <div class="step-pills">
+    <div class="step-pill sp-done"><div class="sp-dot"></div>Contour ✓</div>
+    <div class="step-pill sp-done"><div class="sp-dot"></div>Forme ✓</div>
+    <div class="step-pill sp-active"><div class="sp-dot"></div>Profondeurs</div>
+    <div class="step-pill sp-todo"><div class="sp-dot"></div>Calibrage</div>
+  </div>
+
+  <!-- CANVAS -->
+  <div class="canvas-wrap">
+
+    <!-- POOL SVG -->
+    <svg class="pool-svg" viewBox="0 0 375 290" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <!-- Zone shallow fill -->
+        <linearGradient id="shallowGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#B8E8E8" stop-opacity="0.7"/>
+          <stop offset="100%" stop-color="#8DD8D8" stop-opacity="0.85"/>
+        </linearGradient>
+        <!-- Zone slope fill -->
+        <linearGradient id="slopeGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#8DD8D8" stop-opacity="0.75"/>
+          <stop offset="100%" stop-color="#3D7AB8" stop-opacity="0.8"/>
+        </linearGradient>
+        <!-- Zone deep fill -->
+        <linearGradient id="deepGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#3D7AB8" stop-opacity="0.8"/>
+          <stop offset="100%" stop-color="#1A3A60" stop-opacity="0.9"/>
+        </linearGradient>
+        <!-- Pool shadow -->
+        <filter id="poolShadow">
+          <feDropShadow dx="0" dy="3" stdDeviation="6" flood-color="#2D1B69" flood-opacity="0.2"/>
+        </filter>
+        <!-- Magnet snap glow -->
+        <filter id="snapGlow">
+          <feGaussianBlur stdDeviation="3" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+
+      <!-- Pool outline (rounded rect, slightly tilted like a real photo) -->
+      <!-- Pool: rectangle with slightly rounded corners, centered in canvas -->
+      <g filter="url(#poolShadow)">
+        <!-- Shallow zone -->
+        <path d="M70,50 L305,50 L305,130 L70,130 Z" fill="url(#shallowGrad)" />
+        <!-- Slope zone (thin transition) -->
+        <path d="M70,130 L305,130 L305,165 L70,165 Z" fill="url(#slopeGrad)" />
+        <!-- Deep zone -->
+        <path d="M70,165 L305,165 L305,255 L70,255 Z" fill="url(#deepGrad)" />
+
+        <!-- Pool border -->
+        <rect x="70" y="50" width="235" height="205" rx="8" ry="8"
+              fill="none" stroke="#3DB8B8" stroke-width="2.5"/>
+      </g>
+
+      <!-- Zone divider lines (dashed) -->
+      <line x1="70" y1="130" x2="305" y2="130"
+            stroke="white" stroke-width="1.5" stroke-dasharray="6,4" opacity="0.8"/>
+      <line x1="70" y1="165" x2="305" y2="165"
+            stroke="white" stroke-width="1.5" stroke-dasharray="6,4" opacity="0.8"/>
+
+      <!-- Zone labels on canvas -->
+      <text x="187" y="95" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="11"
+            font-weight="600" fill="white" opacity="0.9">Petite plage · 1,2 m</text>
+      <text x="187" y="152" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="10"
+            font-weight="600" fill="white" opacity="0.8">Pente · 1,2→1,8 m</text>
+      <text x="187" y="215" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="11"
+            font-weight="600" fill="white" opacity="0.9">Grand bain · 1,8 m</text>
+
+      <!-- CONTOUR EDIT POINTS (visible vertices) -->
+      <circle cx="70" cy="50"  r="7" fill="white" stroke="#3DB8B8" stroke-width="2"/>
+      <circle cx="305" cy="50" r="7" fill="white" stroke="#3DB8B8" stroke-width="2"/>
+      <circle cx="305" cy="255" r="7" fill="white" stroke="#3DB8B8" stroke-width="2"/>
+      <circle cx="70" cy="255" r="7" fill="white" stroke="#3DB8B8" stroke-width="2"/>
+
+      <!-- CALIBRATION LINE (pastel lilas semi-transparent) -->
+      <line x1="95" y1="177" x2="280" y2="177"
+            stroke="rgba(190,150,230,0.65)" stroke-width="2.5" stroke-dasharray="6,4"/>
+
+      <!-- Calibration endpoints -->
+      <circle cx="95" cy="177" r="9" fill="rgba(190,150,230,0.75)" stroke="rgba(255,255,255,0.9)" stroke-width="2.5"
+              filter="url(#snapGlow)"/>
+      <circle cx="280" cy="177" r="9" fill="rgba(190,150,230,0.75)" stroke="rgba(255,255,255,0.9)" stroke-width="2.5"/>
+
+      <!-- Calibration label -->
+      <rect x="152" y="162" width="72" height="20" rx="10" fill="rgba(190,150,230,0.7)"/>
+      <text x="188" y="176" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="10"
+            font-weight="700" fill="white">= 8,50 m</text>
+
+      <!-- SNAP INDICATOR: magnet ripple, même palette lilas -->
+      <circle cx="95" cy="177" r="16" fill="none" stroke="rgba(190,150,230,0.35)" stroke-width="1.5"
+              stroke-dasharray="3,3"/>
+
+      <!-- DIMENSION ARROWS (subtle, shows calculated size) -->
+      <!-- Width arrow -->
+      <line x1="70" y1="35" x2="305" y2="35" stroke="#3DB8B8" stroke-width="1" opacity="0.5"/>
+      <line x1="70" y1="30" x2="70" y2="40" stroke="#3DB8B8" stroke-width="1" opacity="0.5"/>
+      <line x1="305" y1="30" x2="305" y2="40" stroke="#3DB8B8" stroke-width="1" opacity="0.5"/>
+      <text x="187" y="30" text-anchor="middle" font-family="Plus Jakarta Sans" font-size="9"
+            fill="#3DB8B8" font-weight="600" opacity="0.8">non calibré</text>
+    </svg>
+
+    <!-- LOUPE (active on left calibration point) -->
+    <div class="loupe">
+      <div class="loupe-inner">
+        <!-- zoomed view: the calibration point on pool edge -->
+        <svg viewBox="80 162 30 30" width="80" height="80">
+          <line x1="70" y1="165" x2="305" y2="165"
+                stroke="white" stroke-width="1.5" stroke-dasharray="6,4" opacity="0.6"/>
+          <line x1="95" y1="155" x2="280" y2="155"
+                stroke="#FF7E5F" stroke-width="3" stroke-dasharray="5,3" opacity="0.8"/>
+          <rect x="70" y="165" width="235" height="90" rx="4"
+                fill="url(#deepGrad)" opacity="0.7"/>
+          <circle cx="95" cy="177" r="6" fill="#FF7E5F" stroke="white" stroke-width="2"/>
+          <rect x="60" y="155" width="235" height="1" fill="#3DB8B8" opacity="0.3"/>
+        </svg>
+      </div>
+      <div class="loupe-label">× 3 zoom</div>
+    </div>
+    <div class="loupe-line"></div>
+
+    <!-- TOOLBAR -->
+    <div class="toolbar">
+      <div class="tool-btn" title="Sélection">☝️</div>
+      <div class="tool-btn" title="Ajouter zone">➕</div>
+      <div class="tool-btn active" title="Calibrage actif">📏</div>
+      <div class="tool-divider"></div>
+      <div class="tool-btn" title="Annuler">↩️</div>
+      <div class="tool-btn" title="Zoom ajusté">⊙</div>
+    </div>
+
+  </div><!-- /canvas-wrap -->
+
+  <!-- BOTTOM PANEL -->
+  <div class="bottom-panel">
+    <div class="panel-handle"></div>
+
+    <div class="panel-context">
+      <div class="context-icon">📐</div>
+      <div class="context-text">
+        <div class="ct-title">Zones de profondeur</div>
+        <div class="ct-sub">Touchez une zone pour modifier sa profondeur. Faites glisser les séparateurs pour redécouper. <strong>Ligne orange = calibrage.</strong></div>
+      </div>
+    </div>
+
+    <div class="zone-list">
+      <div class="zone-row">
+        <div class="zone-swatch shallow"></div>
+        <div class="zone-label">
+          <div class="zl-name">Petite plage</div>
+          <div class="zl-depth">Profondeur fixe</div>
+        </div>
+        <div class="zone-depth-input">
+          <div class="zdi-val">1,2</div>
+          <div class="zdi-unit">m</div>
+        </div>
+      </div>
+      <div class="zone-row active">
+        <div class="zone-swatch slope"></div>
+        <div class="zone-label">
+          <div class="zl-name">Pente</div>
+          <div class="zl-depth">Profondeur inclinée</div>
+        </div>
+        <div class="zone-depth-input">
+          <div class="zdi-val">1,2</div>
+          <div class="zdi-unit">→</div>
+          <div class="zdi-val">1,8</div>
+          <div class="zdi-unit">m</div>
+        </div>
+      </div>
+      <div class="zone-row">
+        <div class="zone-swatch deep"></div>
+        <div class="zone-label">
+          <div class="zl-name">Grand bain</div>
+          <div class="zl-depth">Profondeur fixe</div>
+        </div>
+        <div class="zone-depth-input">
+          <div class="zdi-val">1,8</div>
+          <div class="zdi-unit">m</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="action-row">
+      <button class="btn-secondary">+ Ajouter zone</button>
+      <button class="btn-primary">Calibrer → <span style="font-size:16px">📏</span></button>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

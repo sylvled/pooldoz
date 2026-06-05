@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PoolDoz — Direction 2 : Brutale</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,400;0,700;0,900;1,900&family=IBM+Plex+Mono:wght@400;700&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black:   #0A0A0A;
+    --white:   #F5F5F5;
+    --acid:    #D4FF00;
+    --red:     #FF2D00;
+    --gray:    #C8C8C8;
+    --midgray: #555;
+  }
+
+  body {
+    background: #1A1A1A;
+    font-family: 'IBM Plex Mono', monospace;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .label {
+    text-align: center;
+    margin-bottom: 20px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--acid);
+    font-weight: 700;
+  }
+
+  .phone {
+    width: 375px;
+    min-height: 780px;
+    background: var(--black);
+    overflow: hidden;
+    position: relative;
+    border: 1px solid #333;
+  }
+
+  /* ——— HEADER ——— */
+  .header {
+    background: var(--black);
+    padding: 24px 20px 0;
+    border-bottom: 3px solid var(--acid);
+  }
+
+  .header-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  .logo {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 72px;
+    font-weight: 900;
+    font-style: italic;
+    color: var(--white);
+    line-height: 0.85;
+    letter-spacing: -2px;
+    text-transform: uppercase;
+  }
+  .logo span { color: var(--acid); }
+
+  .pool-badge {
+    background: var(--acid);
+    color: var(--black);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 4px 8px;
+    margin-top: 8px;
+    display: inline-block;
+  }
+
+  .header-tabs {
+    display: flex;
+    gap: 0;
+    margin-top: 0;
+  }
+  .tab {
+    flex: 1;
+    padding: 10px 4px;
+    text-align: center;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--midgray);
+    border-top: 3px solid transparent;
+    cursor: pointer;
+  }
+  .tab.active {
+    color: var(--acid);
+    border-top: 3px solid var(--acid);
+  }
+
+  /* ——— CONTENT ——— */
+  .content {
+    padding: 0;
+  }
+
+  /* MAIN NUMBER BLOCK */
+  .big-number-block {
+    padding: 28px 20px 20px;
+    border-bottom: 1px solid #1E1E1E;
+    position: relative;
+  }
+  .bn-label {
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--midgray);
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .bn-val {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 96px;
+    font-weight: 900;
+    color: var(--red);
+    line-height: 0.85;
+    letter-spacing: -3px;
+  }
+  .bn-sub {
+    font-size: 11px;
+    color: var(--gray);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 6px;
+    font-weight: 700;
+  }
+
+  /* VERDICT STRIP */
+  .verdict-strip {
+    background: var(--red);
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .vs-text {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 22px;
+    font-weight: 900;
+    text-transform: uppercase;
+    color: white;
+    letter-spacing: 1px;
+  }
+  .vs-ppm {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.6);
+    text-transform: uppercase;
+  }
+
+  /* GAUGE */
+  .gauge-section {
+    padding: 16px 20px;
+    border-bottom: 1px solid #1E1E1E;
+  }
+  .gauge-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--midgray);
+    margin-bottom: 8px;
+  }
+  .gauge-track {
+    height: 4px;
+    background: #222;
+    position: relative;
+  }
+  .gauge-fill {
+    height: 100%;
+    width: 68%;
+    background: var(--red);
+  }
+  .gauge-target-line {
+    position: absolute;
+    left: 78%;
+    top: -6px;
+    height: 16px;
+    width: 2px;
+    background: var(--acid);
+  }
+  .gauge-target-label {
+    position: absolute;
+    left: calc(78% + 4px);
+    top: -4px;
+    font-size: 8px;
+    color: var(--acid);
+    font-weight: 700;
+    letter-spacing: 1px;
+    white-space: nowrap;
+  }
+
+  /* PRESCRIPTION */
+  .rx-section {
+    padding: 20px;
+    border-bottom: 1px solid #1E1E1E;
+  }
+  .rx-label {
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--midgray);
+    font-weight: 700;
+    margin-bottom: 12px;
+  }
+  .rx-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .rx-num {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 72px;
+    font-weight: 900;
+    color: var(--acid);
+    line-height: 0.9;
+  }
+  .rx-desc {
+    font-size: 11px;
+    color: var(--gray);
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    line-height: 1.4;
+  }
+
+  .bags-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+  }
+  .bag {
+    border: 1px solid var(--midgray);
+    color: var(--gray);
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    padding: 5px 10px;
+    text-transform: uppercase;
+  }
+
+  .pool-meta {
+    display: flex;
+    gap: 0;
+    border-top: 1px solid #1E1E1E;
+  }
+  .meta-item {
+    flex: 1;
+    padding: 14px 20px;
+    border-right: 1px solid #1E1E1E;
+  }
+  .meta-item:last-child { border-right: none; }
+  .mi-val {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1;
+  }
+  .mi-label {
+    font-size: 8px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--midgray);
+    margin-top: 2px;
+    font-weight: 700;
+  }
+
+  /* CTA */
+  .cta-zone {
+    padding: 16px 20px;
+  }
+  .cta-btn {
+    width: 100%;
+    background: var(--acid);
+    color: var(--black);
+    border: none;
+    padding: 18px 20px;
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 28px;
+    font-weight: 900;
+    font-style: italic;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background 0.15s;
+  }
+  .cta-btn:hover { background: #BBDD00; }
+  .cta-arrow {
+    font-size: 32px;
+    font-style: normal;
+  }
+
+  /* NAV */
+  .nav-bar {
+    display: flex;
+    border-top: 1px solid #1E1E1E;
+  }
+  .nav-item {
+    flex: 1;
+    padding: 14px 4px;
+    text-align: center;
+    font-size: 8px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--midgray);
+    cursor: pointer;
+  }
+  .nav-item.active { color: var(--acid); }
+  .nav-icon { font-size: 16px; display: block; margin-bottom: 3px; }
+</style>
+</head>
+<body>
+<div class="label">Direction 2 — Brutale · Anti-slop · Typographique · Radical</div>
+<div class="phone">
+  <div class="header">
+    <div class="header-top">
+      <div>
+        <div class="logo">Pool<span>Doz</span></div>
+        <div class="pool-badge">Terrasse · 47,3 m³</div>
+      </div>
+    </div>
+    <div class="header-tabs">
+      <div class="tab">Historique</div>
+      <div class="tab active">Dosage</div>
+      <div class="tab">Piscine</div>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="big-number-block">
+      <div class="bn-label">Sel mesuré</div>
+      <div class="bn-val">2800</div>
+      <div class="bn-sub">ppm · −400 sous la cible</div>
+    </div>
+
+    <div class="verdict-strip">
+      <div class="vs-text">Taux bas</div>
+      <div class="vs-ppm">Cible : 3 200 ppm</div>
+    </div>
+
+    <div class="gauge-section">
+      <div class="gauge-label">
+        <span>0</span>
+        <span>Niveau sel</span>
+        <span>5 000</span>
+      </div>
+      <div class="gauge-track">
+        <div class="gauge-fill"></div>
+        <div class="gauge-target-line"></div>
+        <div class="gauge-target-label">3 200</div>
+      </div>
+    </div>
+
+    <div class="rx-section">
+      <div class="rx-label">À ajouter maintenant</div>
+      <div class="rx-row">
+        <div class="rx-num">14,2</div>
+        <div class="rx-desc">kg de sel<br>à verser</div>
+      </div>
+      <div class="bags-row">
+        <div class="bag">1× sac 10 kg</div>
+        <div class="bag">1× sac 5 kg</div>
+      </div>
+    </div>
+
+    <div class="pool-meta">
+      <div class="meta-item">
+        <div class="mi-val">47,3</div>
+        <div class="mi-label">m³ volume</div>
+      </div>
+      <div class="meta-item">
+        <div class="mi-val">Sel</div>
+        <div class="mi-label">Produit</div>
+      </div>
+      <div class="meta-item">
+        <div class="mi-val">3 200</div>
+        <div class="mi-label">ppm cible</div>
+      </div>
+    </div>
+
+    <div class="cta-zone">
+      <button class="cta-btn">
+        <span>C'est ajouté</span>
+        <span class="cta-arrow">→</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="nav-bar">
+    <div class="nav-item"><span class="nav-icon">💧</span>Dosage</div>
+    <div class="nav-item active"><span class="nav-icon">🏊</span>Piscine</div>
+    <div class="nav-item"><span class="nav-icon">📋</span>Journal</div>
+    <div class="nav-item"><span class="nav-icon">⚙️</span>Config</div>
+  </div>
+</div>
+</body>
+</html>
