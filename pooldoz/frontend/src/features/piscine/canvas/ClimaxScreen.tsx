@@ -35,7 +35,7 @@ export function ClimaxScreen({ volume: volumeProp, zones: zonesProp }: ClimaxScr
   const location = useLocation()
   const state = (location.state ?? {}) as ClimaxState
   // Accept data from route state (navigate('/climax', { state: ... })) or direct props
-  const volume = volumeProp ?? state.volume ?? 0
+  const volume = Number(volumeProp ?? state.volume ?? 0)
   const zones  = zonesProp  ?? state.zones
   const isBrutale = useSettingsStore((s) => s.theme) === 'brutale'
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -222,8 +222,8 @@ export function ClimaxScreen({ volume: volumeProp, zones: zonesProp }: ClimaxScr
             {zones.map((z, i) => (
               <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
                 <div style={{ width: 10, height: 10, borderRadius: isBrutale ? 0 : 3, background: i === 0 ? (isBrutale ? '#555' : '#B8E8E8') : i === 1 ? (isBrutale ? '#333' : '#6ABABA') : (isBrutale ? '#222' : '#3D7AB8'), flexShrink: 0, border: isBrutale ? '1px solid var(--border-color)' : 'none' }} />
-                <div style={{ flex: 1, fontSize: 12, color: 'var(--text-secondary)', fontFamily: 'var(--font-ui)' }}>{z.label} · {z.depth} m</div>
-                <div style={{ fontFamily: 'var(--font-display)', fontSize: 14, fontWeight: 700, color: 'var(--text)' }}>{formatFR(z.volume)} m³</div>
+                <div style={{ flex: 1, fontSize: 12, color: 'var(--text-secondary)', fontFamily: 'var(--font-ui)' }}>{z.label} · {Number(z.depth).toFixed(1)} m</div>
+                <div style={{ fontFamily: 'var(--font-display)', fontSize: 14, fontWeight: 700, color: 'var(--text)' }}>{formatFR(Number(z.volume ?? 0))} m³</div>
               </div>
             ))}
             <div style={{ height: 1, background: 'var(--border-color)', margin: '6px 0' }} />

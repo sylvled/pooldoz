@@ -204,7 +204,22 @@ export function CanvasEditor({ backgroundImage }: CanvasEditorProps) {
       })
     }
 
-    navigate('/climax', { state: { volume, zones: depthZones.zones } })
+    // Build zone breakdown for ClimaxScreen display
+    // { label, depth, volume } per zone
+    let prevSep = 0
+    const climaxZones = depthZones.zones.map((z, i) => {
+      const fraction = z.separator - prevSep
+      prevSep = z.separator
+      const avgDepth = z.depthB != null ? (z.depthA + z.depthB) / 2 : z.depthA
+      const zoneVol  = Math.round(volume * fraction * 100) / 100
+      return {
+        label: `Zone ${i + 1}`,
+        depth: Math.round(avgDepth * 10) / 10,
+        volume: zoneVol,
+      }
+    })
+
+    navigate('/climax', { state: { volume, zones: climaxZones } })
   }
 
   // ── Step config ───────────────────────────────────────────────────────────
